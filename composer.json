@@ -1,0 +1,24 @@
+{
+    "name": "baytek/laravel-content-discussion",
+    "description": "Discussion Content Provider",
+    "license": "MIT",
+    "type": "project",
+    "authors": [
+        {
+            "name": "Yvon Viger",
+            "email": "yvon@baytek.ca"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Baytek\\Laravel\\Content\\Types\\Discussions\\": "src/"
+        }
+    },
+    "require": {
+        "php": ">=5.6.4"
+    },
+    "post-install-cmd": [
+        "php artisan install:discussion"
+    ],
+    "minimum-stability": "dev"
+}
