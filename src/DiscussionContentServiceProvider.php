@@ -46,7 +46,7 @@ class DiscussionContentServiceProvider extends AuthServiceProvider
      * @var Array
      */
     protected $settings = [
-        'discussion' => DiscussionSettings::class
+        // 'discussion' => DiscussionSettings::class
     ];
 
     /**

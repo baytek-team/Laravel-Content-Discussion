@@ -1,22 +1,22 @@
 <?php
-namespace Baytek\Laravel\Content\Types\Webpage\Commands;
+namespace Baytek\Laravel\Content\Types\Discussion\Commands;
 
 use Baytek\Laravel\Content\Models\Content;
 use Baytek\Laravel\Content\Commands\Installer;
-use Baytek\Laravel\Content\Types\Webpage\Seeders\WebpageSeeder;
-use Baytek\Laravel\Content\Types\Webpage\Webpage;
-use Baytek\Laravel\Content\Types\Webpage\WebpageContentServiceProvider;
+use Baytek\Laravel\Content\Types\Discussion\Seeders\DiscussionSeeder;
+use Baytek\Laravel\Content\Types\Discussion\Discussion;
+use Baytek\Laravel\Content\Types\Discussion\DiscussionContentServiceProvider;
 use Spatie\Permission\Models\Permission;
 
 use Artisan;
 use DB;
 
-class WebpageInstaller extends Installer
+class DiscussionInstaller extends Installer
 {
-    public $name = 'Webpage';
-    protected $provider = WebpageContentServiceProvider::class;
-    protected $model = Webpage::class;
-    protected $seeder = WebpageSeeder::class;
+    public $name = 'Discussion';
+    protected $provider = DiscussionContentServiceProvider::class;
+    protected $model = Discussion::class;
+    protected $seeder = DiscussionSeeder::class;
     protected $migrationPath = __DIR__.'/../resources/Database/Migrations';
 
     public function shouldPublish()
@@ -41,8 +41,7 @@ class WebpageInstaller extends Installer
     public function shouldSeed()
     {
         $relevantRecords = [
-            'webpage',
-            'homepage',
+            'discussion',
         ];
 
         return Content::whereIn('key', $relevantRecords)->count() === 0;
