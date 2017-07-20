@@ -2,18 +2,19 @@
 
 namespace Baytek\Laravel\Content\Types\Discussion\Controllers;
 
-use Baytek\Laravel\Content\Types\Discussion\Models\Discussion;
-use Baytek\Laravel\Content\Types\Discussion\Models\Topic;
-use Baytek\Laravel\Content\Types\Discussion\Scopes\ApprovedDiscussionScope;
+// use App\Jobs\SendQueuedDiscussionEmail;
+use App\Roles\Member;
 
 use Baytek\Laravel\Content\Controllers\ContentController;
-use Illuminate\Http\Request;
+use Baytek\Laravel\Content\Events\ContentEvent;
+use Baytek\Laravel\Content\Types\Discussion\Models\Discussion;
+use Baytek\Laravel\Content\Types\Discussion\Models\Topic;
 use Baytek\Laravel\Content\Types\Discussion\Requests\DiscussionRequest;
 use Baytek\Laravel\Content\Types\Discussion\Requests\ResponseRequest;
-
+use Baytek\Laravel\Content\Types\Discussion\Scopes\ApprovedDiscussionScope;
 use Baytek\Laravel\Users\User;
-use App\Jobs\SendQueuedDiscussionEmail;
-use App\Roles\Member;
+
+use Illuminate\Http\Request;
 
 use View;
 
@@ -137,7 +138,7 @@ class DiscussionController extends ContentController
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(DiscussionRequest $request)
+    public function store(Request $request)
     {
         $this->redirects = false;
 
@@ -149,22 +150,22 @@ class DiscussionController extends ContentController
         $discussion->saveMetadata('response_count', 0);
 
         //Check if the members need to be notified
-        if (isset($request->notify) && $request->notify) {
-            $users = User::role(Member::ROLE)->get();
+        // if (isset($request->notify) && $request->notify) {
+        //     $users = User::role(Member::ROLE)->get();
 
-            //Dispatch job for delayed member email
-            $users->each(function ($user) use ($discussion) {
-                //Delay is in seconds, 3600 = 1 hour
-                $job = (new SendQueuedDiscussionEmail($user, $discussion))->delay(3600);
-                $this->dispatch($job);
-            });
-        }
+        //     //Dispatch job for delayed member email
+        //     $users->each(function ($user) use ($discussion) {
+        //         //Delay is in seconds, 3600 = 1 hour
+        //         $job = (new SendQueuedDiscussionEmail($user, $discussion))->delay(3600);
+        //         $this->dispatch($job);
+        //     });
+        // }
 
         $discussion->offBit(Discussion::DELETED);
         $discussion->onBit(Discussion::APPROVED)->save();
 
         //Update the server cache
-        event(new \Baytek\Laravel\Content\Events\ContentEvent($discussion));
+        event(new ContentEvent($discussion));
 
         return redirect(route('discussion.index', $discussion));
     }
@@ -192,7 +193,7 @@ class DiscussionController extends ContentController
      *
      * @return \Illuminate\Http\Response
      */
-    public function update(DiscussionRequest $request, $id)
+    public function update(Request $request, $id)
     {
         $this->redirects = false;
 
@@ -203,12 +204,12 @@ class DiscussionController extends ContentController
         $discussion->saveRelation('parent-id', $request->parent_id);
 
         //Update the server cache
-        event(new \Baytek\Laravel\Content\Events\ContentEvent($discussion));
+        event(new ContentEvent($discussion));
 
         //Trigger update events for discussion topic
         $topic = Topic::find($request->parent_id);
         $topic->touch();
-        event(new \Baytek\Laravel\Content\Events\ContentEvent($topic));
+        event(new ContentEvent($topic));
 
         return redirect(route($this->names['singular'].'.edit', $discussion));
     }

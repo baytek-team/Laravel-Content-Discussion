@@ -2,8 +2,8 @@
 
 namespace Baytek\Laravel\Content\Types\Discussion\Requests;
 
-use App\Http\Requests\Request;
 use Baytek\Laravel\Content\Models\Content;
+use Illuminate\Http\Request;
 
 class DiscussionRequest extends Request
 {

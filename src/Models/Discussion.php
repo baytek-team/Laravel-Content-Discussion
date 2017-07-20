@@ -2,7 +2,7 @@
 
 namespace Baytek\Laravel\Content\Types\Discussion\Models;
 
-use App\ContentTypes\Members\Models\Member;
+use Baytek\Laravel\Users\User;
 use Baytek\Laravel\Content\Types\Discussion\Scopes\DiscussionScope;
 use Baytek\Laravel\Content\Types\Discussion\Scopes\ApprovedDiscussionScope;
 
@@ -51,7 +51,7 @@ class Discussion extends Content
 
     public function setAuthorIdMetadata($id)
     {
-        return Member::find($id);
+        return User::find($id);
     }
 
     /**
@@ -81,7 +81,7 @@ class Discussion extends Content
 
     // public function getAuthorAttribute($query)
     // {
-    //     return (new Member)->find($this->getMeta('author_id')));
+    //     return (new User)->find($this->getMeta('author_id')));
     // }
 
     public function scopeOptions($query, $parameters = null)
@@ -175,7 +175,7 @@ class Discussion extends Content
      */
     public function membersWhoFavourited()
     {
-        return $this->belongsToMany(Member::class, 'content_user', 'content_id', 'user_id');
+        return $this->belongsToMany(User::class, 'content_user', 'content_id', 'user_id');
     }
 
 }

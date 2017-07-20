@@ -4,10 +4,6 @@ namespace Baytek\Laravel\Content\Types\Discussion;
 
 use Baytek\Laravel\Content\ContentServiceProvider;
 use Baytek\Laravel\Content\Models\Content;
-use Baytek\Laravel\Content\Types\Discussion\Policies\DiscussionPolicy;
-use Baytek\Laravel\Content\Types\Discussion\Settings\DiscussionSettings;
-use Baytek\Laravel\Content\Types\Discussion\Discussion;
-use Baytek\Laravel\Content\Types\Discussion\DiscussionInstaller;
 use Baytek\Laravel\Settings\Settable;
 use Baytek\Laravel\Settings\SettingsProvider;
 
@@ -30,7 +26,7 @@ class DiscussionContentServiceProvider extends AuthServiceProvider
      * @var [type]
      */
     protected $policies = [
-        Discussion::class => DiscussionPolicy::class,
+        Discussion::class => Policies\DiscussionPolicy::class,
     ];
 
     /**
@@ -46,7 +42,7 @@ class DiscussionContentServiceProvider extends AuthServiceProvider
      * @var Array
      */
     protected $settings = [
-        // 'discussion' => DiscussionSettings::class
+        // 'discussion' => Settings\DiscussionSettings::class
     ];
 
     /**
@@ -64,9 +60,14 @@ class DiscussionContentServiceProvider extends AuthServiceProvider
         // Set the local load path for views
         $this->loadViewsFrom(__DIR__.'/../resources/Views', 'Discussion');
 
+        // Publish routes to the App
+        $this->publishes([
+            __DIR__.'/../src/Routes' => base_path('routes'),
+        ], 'routes');
+
         // Set the path to publish assets for users to extend
         $this->publishes([
-            __DIR__.'/../resources/Views' => resource_path('views/vendor/discussion'),
+            __DIR__.'/../views' => resource_path('views/vendor'),
         ], 'views');
 
         $this->publishes([
@@ -77,17 +78,7 @@ class DiscussionContentServiceProvider extends AuthServiceProvider
             return true;//$user->id === Content::findOrNew($contentId)->user_id;
         });
 
-        $this->bootRoutes();
     }
-
-    public function bootRoutes()
-    {
-        // Set local namespace and make sure the route bindings occur
-        if(config('discussion.enabled')) {
-
-        }
-    }
-
 
     /**
      * Register the application services.
@@ -98,6 +89,8 @@ class DiscussionContentServiceProvider extends AuthServiceProvider
     {
         // Register commands
         $this->commands($this->commands);
+
+        $this->app->register(RouteServiceProvider::class);
 
     }
 }
