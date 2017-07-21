@@ -44,34 +44,12 @@ class DiscussionController extends ContentController
     protected $redirectsKey = 'discussion';
 
     /**
-     * [__construct description]
-     *
-     * @return  null
-     */
-    public function __construct()
-    {
-        $this->loadViewsFrom(resource_path().'/views', 'discussion');
-
-        parent::__construct();
-    }
-
-    /**
      * Show the index of all content with content type 'discussion'
      *
      * @return \Illuminate\Http\Response
      */
     public function index($topicID = null)
     {
-        // $this->viewData['index'] = [
-        //     'discussions' => Discussion::ofType('discussion')
-        //         ->approved()
-        //         ->paginate(),
-        //     'filter' => 'active',
-        // ];
-
-        // dd(Discussion::query()->childrenOfType(Topic::all(), 'discussion')->get()->pluck('status'));
-        // dd(Discussion::withStatus(Discussion::APPROVED)->childrenOfType(Topic::all(), 'discussion')->get()->pluck('status'));
-
         $this->viewData['index'] = [
             'discussions' => Discussion::childrenOfType(Topic::all(), 'discussion')->withStatus(Discussion::APPROVED)
                 ->orderBy('created_at', 'desc')

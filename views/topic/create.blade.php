@@ -1,5 +1,4 @@
-@extends('admin.discussions.topic.template')
-
+@extends('topic::template')
 
 @section('content')
     <div class="flex-center position-ref full-height">
