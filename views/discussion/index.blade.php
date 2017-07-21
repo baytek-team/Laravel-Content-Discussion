@@ -38,7 +38,7 @@
                             <div class="content">
                                 <div class="header">
                                     @if($discussion->metadata('author_id'))
-                                        <a href="{{ route( 'members.edit', $discussion->metadata('author_id')) }}">{{ $discussion->metadata('author_id')->name }}</a>
+                                        {{-- <a href="{{ route( 'members.edit', $discussion->metadata('author_id')) }}"> --}}{{ $discussion->metadata('author_id')->name }}{{-- </a> --}}
                                     @else
                                         {{ __('Unknown Author') }}
                                     @endif

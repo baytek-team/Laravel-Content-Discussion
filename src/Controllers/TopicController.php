@@ -116,7 +116,7 @@ class TopicController extends ContentController
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(TopicRequest $request)
+    public function store(Request $request)
     {
         $this->redirects = false;
 
@@ -148,7 +148,7 @@ class TopicController extends ContentController
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function update(TopicRequest $request, $id)
+    public function update(Request $request, $id)
     {
         return parent::contentUpdate($request, $id);
     }
