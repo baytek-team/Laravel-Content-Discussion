@@ -1,9 +1,12 @@
 <?php
 
+use Baytek\Laravel\Content\Types\Discussion\Models\Discussion;
+use Baytek\Laravel\Content\Types\Discussion\Models\Topic;
+
 /**
  * Discussions Categories
  */
-$factory->define(App\ContentTypes\Discussions\Models\Topic::class, function (Faker\Generator $faker) {
+$factory->define(Topic::class, function (Faker\Generator $faker) {
 
     $title = ucwords(implode(' ', $faker->unique()->words(rand(1,2))));
 
@@ -11,7 +14,7 @@ $factory->define(App\ContentTypes\Discussions\Models\Topic::class, function (Fak
         'key' => str_slug($title),
         'title' => $title,
         'content' => null,
-        'status' => App\ContentTypes\Discussions\Models\Topic::APPROVED,
+        'status' => Topic::APPROVED,
         'language' => App::getLocale(),
     ];
 });
@@ -19,7 +22,7 @@ $factory->define(App\ContentTypes\Discussions\Models\Topic::class, function (Fak
 /**
  * Discussions Items
  */
-$factory->define(App\ContentTypes\Discussions\Models\Discussion::class, function (Faker\Generator $faker) {
+$factory->define(Discussion::class, function (Faker\Generator $faker) {
 
     $title = $faker->sentence();
 
@@ -27,7 +30,7 @@ $factory->define(App\ContentTypes\Discussions\Models\Discussion::class, function
         'key' => str_slug($title),
         'title' => $title,
         'content' => $faker->paragraph(),
-        'status' => App\ContentTypes\Discussions\Models\Discussion::APPROVED,
+        'status' => Discussion::APPROVED,
         'language' => App::getLocale(),
     ];
 });
