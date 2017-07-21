@@ -1,4 +1,4 @@
-@extends('admin.discussions.discussion.template')
+@extends('discussion::template')
 
 @section('page.head.menu')
     @if($discussion->hasStatus($discussion::APPROVED))
@@ -47,7 +47,7 @@
                 <label for="content">{{ ___('Content') }}</label>
                 <textarea id="content" name="content" placeholder="Content">{{ strip_tags(old('content', $discussion->content)) }}</textarea>
             </div>
-            
+
             <div class="ui hidden divider"></div>
 
             <div class="ui hidden error message"></div>

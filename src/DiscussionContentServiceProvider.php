@@ -58,7 +58,9 @@ class DiscussionContentServiceProvider extends AuthServiceProvider
         $this->registerSettings($this->settings);
 
         // Set the local load path for views
-        $this->loadViewsFrom(__DIR__.'/../resources/Views', 'Discussion');
+        $this->loadViewsFrom(__DIR__.'/../views/discussion', 'discussion');
+        $this->loadViewsFrom(__DIR__.'/../views/topic', 'topic');
+        $this->loadViewsFrom(__DIR__.'/../views/response', 'response');
 
         // Publish routes to the App
         $this->publishes([
