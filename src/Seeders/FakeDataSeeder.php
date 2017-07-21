@@ -1,5 +1,7 @@
 <?php
 
+namespace Baytek\Laravel\Content\Types\Discussion\Seeders;
+
 use Illuminate\Database\Seeder;
 
 use Baytek\Laravel\Content\Types\Discussion\Models\Discussion;
