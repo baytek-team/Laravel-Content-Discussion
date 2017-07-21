@@ -4,6 +4,7 @@ namespace Baytek\Laravel\Content\Types\Discussion\Commands;
 use Baytek\Laravel\Content\Models\Content;
 use Baytek\Laravel\Content\Commands\Installer;
 use Baytek\Laravel\Content\Types\Discussion\Seeders\DiscussionSeeder;
+use Baytek\Laravel\Content\Types\Discussion\Seeders\FakeDataSeeder;
 use Baytek\Laravel\Content\Types\Discussion\Discussion;
 use Baytek\Laravel\Content\Types\Discussion\DiscussionContentServiceProvider;
 use Spatie\Permission\Models\Permission;
@@ -17,6 +18,7 @@ class DiscussionInstaller extends Installer
     protected $provider = DiscussionContentServiceProvider::class;
     protected $model = Discussion::class;
     protected $seeder = DiscussionSeeder::class;
+    protected $fakeSeeder = FakeDataSeeder::class;
     protected $migrationPath = __DIR__.'/../resources/Database/Migrations';
 
     public function shouldPublish()

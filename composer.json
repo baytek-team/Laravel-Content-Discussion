@@ -15,7 +15,8 @@
         }
     },
     "require": {
-        "php": ">=5.6.4"
+        "php": ">=5.6.4",
+        "baytek/laravel-user": "dev-master"
     },
     "post-install-cmd": [
         "php artisan install:discussion"
