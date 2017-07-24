@@ -15,7 +15,6 @@ use DB;
 class DiscussionInstaller extends Installer
 {
     public $name = 'Discussion';
-    protected $protected = ['Discussion', 'Topic'];
     protected $provider = DiscussionContentServiceProvider::class;
     protected $model = Discussion::class;
     protected $seeder = DiscussionSeeder::class;
@@ -52,13 +51,11 @@ class DiscussionInstaller extends Installer
 
     public function shouldProtect()
     {
-        foreach ($protected as $model) {
-            foreach(['view', 'create', 'update', 'delete'] as $permission) {
+        foreach(['view', 'create', 'update', 'delete'] as $permission) {
 
-                // If the permission exists in any form do not reseed.
-                if(Permission::where('name', title_case($permission.' '.$model)->exists()) {
-                    return false;
-                }
+            // If the permission exists in any form do not reseed.
+            if(Permission::where('name', title_case($permission.' '.$this->name))->exists()) {
+                return false;
             }
         }
 
