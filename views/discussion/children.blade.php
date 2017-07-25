@@ -1,4 +1,4 @@
-@extends('discussion::template')
+@extends('discussions::discussion.template')
 
 @section('content')
 <h2 class="ui header">

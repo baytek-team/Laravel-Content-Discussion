@@ -1,4 +1,4 @@
-@extends('topic::template')
+@extends('discussions::topic.template')
 
 @section('content')
     <div class="flex-center position-ref full-height">
@@ -6,7 +6,7 @@
             <form action="{{route('discussion.topic.store')}}" method="POST" class="ui form">
                 {{ csrf_field() }}
 
-                @include('topic::form')
+                @include('discussions::topic.form')
                 <div class="ui hidden divider"></div>
                 <div class="ui hidden divider"></div>
 

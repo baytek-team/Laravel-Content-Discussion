@@ -1,4 +1,4 @@
-@extends('discussion::template')
+@extends('discussions::discussion.template')
 
 @section('page.head.menu')
     @if($discussion->hasStatus($discussion::APPROVED))

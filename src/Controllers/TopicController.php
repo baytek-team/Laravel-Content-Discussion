@@ -20,32 +20,20 @@ class TopicController extends ContentController
      */
     protected $model = Topic::class;
 
-    protected $viewPrefix = 'admin/discussions';
+    protected $viewPrefix = 'admin';
 
     /**
      * List of views this content type uses
      * @var [type]
      */
     protected $views = [
-        'index' => 'index',
-        'create' => 'create',
-        'edit' => 'edit',
-        'show' => 'show',
+        'index' => 'topic.index',
+        'create' => 'topic.create',
+        'edit' => 'topic.edit',
+        'show' => 'topic.show',
     ];
 
     protected $redirectsKey = 'discussion.topic';
-
-    /**
-     * [__construct description]
-     *
-     * @return  null
-     */
-    public function __construct()
-    {
-        $this->loadViewsFrom(resource_path().'/views', 'topic');
-
-        parent::__construct();
-    }
 
     /**
      * Show the index of all content with content type 'discussion'

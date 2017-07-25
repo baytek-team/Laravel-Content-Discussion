@@ -27,18 +27,18 @@ class DiscussionController extends ContentController
      */
     protected $model = Discussion::class;
 
-    protected $viewPrefix = 'admin/discussions';
+    protected $viewPrefix = 'admin';
 
     /**
      * List of views this content type uses
      * @var [type]
      */
     protected $views = [
-        'index' => 'index',
-        'create' => 'create',
-        'edit' => 'edit',
-        'show' => 'show',
-        'translate' => 'translate',
+        'index' => 'discussion.index',
+        'create' => 'discussion.create',
+        'edit' => 'discussion.edit',
+        'show' => 'discussion.show',
+        'translate' => 'discussion.translate',
     ];
 
     protected $redirectsKey = 'discussion';

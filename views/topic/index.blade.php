@@ -1,4 +1,4 @@
-@extends('topic::template')
+@extends('discussions::topic.template')
 
 @section('page.head.menu')
     <div class="ui secondary menu">

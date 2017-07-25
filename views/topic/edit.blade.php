@@ -1,4 +1,4 @@
-@extends('topic::template')
+@extends('discussions::topic.template')
 
 @section('page.head.menu')
     @if($topic->hasStatus($topic::APPROVED))
@@ -42,7 +42,7 @@
             {{ csrf_field() }}
             {{ method_field('PUT') }}
 
-            @include('topic::form')
+            @include('discussions::topic.form')
             {{-- <div class="field">
                 <div class="ui toggle checkbox">
                     <input type="checkbox" name="notify" tabindex="0" class="hidden">

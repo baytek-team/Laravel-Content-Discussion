@@ -1,4 +1,4 @@
-@extends('discussion::template')
+@extends('discussions::discussion.template')
 
 @section('content')
     <div class="flex-center position-ref full-height">
@@ -6,7 +6,7 @@
             <form action="{{route('discussion.store')}}" method="POST" class="ui form">
                 {{ csrf_field() }}
 
-                @include('discussion::form')
+                @include('discussions::discussion.form')
                 <div class="field">
                     <div class="ui toggle checkbox">
                         <input type="checkbox" name="notify" tabindex="0" class="hidden" @if(old('notify')) checked="checked" @endif>
