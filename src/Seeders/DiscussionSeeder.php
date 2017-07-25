@@ -9,7 +9,7 @@ class DiscussionSeeder extends Seeder
         [
             'key' => 'discussion',
             'title' => 'Discussion',
-            'content' => 'Baytek\Laravel\Content\Types\Discussion\Models\Discussion',
+            'content' => Baytek\Laravel\Content\Types\Discussion\Models\Discussion::class,
             'relations' => [
                 ['parent-id', 'content-type']
             ]
@@ -17,7 +17,7 @@ class DiscussionSeeder extends Seeder
         [
             'key' => 'discussion-topic',
             'title' => 'Discussion Topic',
-            'content' => 'Baytek\Laravel\Content\Types\Discussion\Models\Topic',
+            'content' => Baytek\Laravel\Content\Types\Discussion\Models\Topic::class,
             'relations' => [
                 ['parent-id', 'content-type'],
             ]
