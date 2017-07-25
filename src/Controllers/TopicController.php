@@ -23,6 +23,12 @@ class TopicController extends ContentController
     protected $viewPrefix = 'admin';
 
     /**
+     * Namespace from which to load the view
+     * @var string
+     */
+    protected $viewNamespace = 'discussions';
+
+    /**
      * List of views this content type uses
      * @var [type]
      */
