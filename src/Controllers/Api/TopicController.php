@@ -14,7 +14,7 @@ class TopicController extends ApiController
     public function index()
     {
         return Topic::with(Topic::$eager)
-            ->withRelations()
+            ->withRelationships()
             ->withMeta()
             ->orderBy('title', 'asc')
             ->get();
@@ -23,7 +23,7 @@ class TopicController extends ApiController
     public function all()
     {
         return Topic::with(Topic::$eager)
-            ->withRelations()
+            ->withRelationships()
             ->withMeta()
             ->orderBy('title', 'asc')
             ->get();
