@@ -51,7 +51,7 @@ class FakeDataSeeder extends Seeder
     		//Choose a parent at random
     		//Can choose from discussions if any exist
     		if ($index > $total/10) {
-    			$parent_id = rand(0,1) ? $topics->random()->id : $discussion_ids->random();
+    			$parent_id = rand(0,2) ? $discussion_ids->random() : $topics->random()->id;
     		}
     		else {
     			$parent_id = $topics->random()->id;
