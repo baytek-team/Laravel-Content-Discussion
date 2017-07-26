@@ -6,38 +6,28 @@ use Baytek\Laravel\Content\Types\Discussion\Models\Topic;
 use Baytek\Laravel\Content\Types\Discussion\Scopes\ApprovedTopicScope;
 use Baytek\Laravel\Content\Types\Discussion\Scopes\TopicScope;
 
-use App\Http\Controllers\Controller;
+use Baytek\Laravel\Content\Controllers\ApiController;
 use Illuminate\Http\Request;
 
-class TopicController extends Controller
+class TopicController extends ApiController
 {
     public function index()
     {
         return Topic::with(Topic::$eager)
+            ->withRelations()
+            ->withMeta()
             ->orderBy('title', 'asc')
-            ->get()
-            ->load('relations', 'relations.relation', 'relations.relationType', 'meta');
+            ->get();
     }
-
 
     public function all()
     {
         return Topic::with(Topic::$eager)
+            ->withRelations()
+            ->withMeta()
             ->orderBy('title', 'asc')
-            ->get()
-            ->load('relations', 'relations.relation', 'relations.relationType', 'meta');
+            ->get();
     }
-
-
-    // public function discussions($options = null)
-    // {
-    //     $discussions = Topic::ofType('topic')
-    //         ->options($options)
-    //         ->withContents()
-    //         ->get();
-
-    //     return $topics->count() ? $topics: abort(404);
-    // }
 
     public function get($topic)
     {

@@ -7,20 +7,20 @@ use Baytek\Laravel\Content\Types\Discussion\Models\Topic;
 use Baytek\Laravel\Content\Types\Discussion\Scopes\ApprovedDiscussionScope;
 use Baytek\Laravel\Content\Controllers\ContentController;
 use Baytek\Laravel\Content\Models\Scopes\TranslationScope;
-use App\Events\DiscussionCreated;
-use App\Events\DiscussionShared;
+// use App\Events\DiscussionCreated;
+// use App\Events\DiscussionShared;
 use Baytek\Laravel\Content\Types\Discussion\Requests\DiscussionRequest;
 use Baytek\Laravel\Content\Types\Discussion\Requests\ResponseRequest;
 
 use Baytek\Laravel\Users\User;
-use App\Jobs\SendQueuedDiscussionEmail;
-use App\Roles\Member;
+// use App\Jobs\SendQueuedDiscussionEmail;
+// use App\Roles\Member;
 
-use App\Http\Controllers\Controller;
+use Baytek\Laravel\Content\Controllers\ApiController;
 use Illuminate\Http\Request;
 use Auth;
 
-class DiscussionController extends Controller
+class DiscussionController extends ApiController
 {
     public function index()
     {
@@ -65,22 +65,22 @@ class DiscussionController extends Controller
         $discussion->children = [];
 
         //Broadcast event for admin email
-        event(new DiscussionCreated($discussion));
+        // event(new DiscussionCreated($discussion));
 
         //Temporary fix for cache issue
         event(new \Baytek\Laravel\Content\Events\ContentEvent($discussion));
 
         //Check if the members need to be notified
-        if (isset($request->notifyUsersField) && $request->notifyUsersField) {
-            $users = User::role(Member::ROLE)->get();
+        // if (isset($request->notifyUsersField) && $request->notifyUsersField) {
+        //     $users = User::role(Member::ROLE)->get();
 
-            //Dispatch job for delayed member email
-            $users->each(function ($user) use ($discussion) {
-                //Delay is in seconds, 3600 = 1 hour
-                $job = (new SendQueuedDiscussionEmail($user, $discussion))->delay(3600);
-                $this->dispatch($job);
-            });
-        }
+        //     //Dispatch job for delayed member email
+        //     $users->each(function ($user) use ($discussion) {
+        //         //Delay is in seconds, 3600 = 1 hour
+        //         $job = (new SendQueuedDiscussionEmail($user, $discussion))->delay(3600);
+        //         $this->dispatch($job);
+        //     });
+        // }
 
         return response()->json([
             'status' => 'success',
@@ -289,7 +289,7 @@ class DiscussionController extends Controller
     public function share(Request $request, $topic, $discussion)
     {
         // Trigger the share event to send an email to the user
-        event(new DiscussionShared($request, $this->discussion($topic, $discussion)->first(), $topic));
+        // event(new DiscussionShared($request, $this->discussion($topic, $discussion)->first(), $topic));
 
         return response()->json([
             'status' => 'success',
