@@ -14,6 +14,8 @@ Route::group([
 	Route::get('/top/options/{options?}', 'DiscussionController@top')
 		->where('options', '.*?');
 
+	Route::get('/dashboard', 'DiscussionController@dashboard');
+
 	// Search for a discussion given a query
 	Route::get('/search', 'DiscussionController@search');
 

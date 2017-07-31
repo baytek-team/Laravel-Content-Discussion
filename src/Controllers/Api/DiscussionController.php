@@ -335,6 +335,19 @@ class DiscussionController extends ApiController
     }
 
     /**
+     * Return three top-level discussions
+     */
+    public function dashboard()
+    {
+        $discussions = Discussion::childrenOfType(Topic::all(), 'discussion')
+            ->withStatus('r', Discussion::APPROVED)
+            ->latest('r.created_at')
+            ->paginate(3);
+
+        return $discussions->count() ? $discussions: abort(404);
+    }
+
+    /**
      * Get a member's discussions
      */
     public function byMember($member, $options = null)
