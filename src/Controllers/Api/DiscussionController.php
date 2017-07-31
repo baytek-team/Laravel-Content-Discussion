@@ -340,6 +340,7 @@ class DiscussionController extends ApiController
     public function dashboard()
     {
         $discussions = Discussion::childrenOfType(Topic::all(), 'discussion')
+            ->withContents()
             ->withStatus('r', Discussion::APPROVED)
             ->latest('r.created_at')
             ->paginate(3);
