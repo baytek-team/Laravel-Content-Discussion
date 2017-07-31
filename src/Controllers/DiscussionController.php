@@ -67,7 +67,7 @@ class DiscussionController extends ContentController
      */
     public function children(Discussion $discussion)
     {
-        return view('discussion::children', [
+        return view('discussions::discussion.children', [
             'discussions' => Discussion::childrenOfType($discussion->key, 'discussion')
                 ->withContents()
                 ->paginate(),
@@ -201,7 +201,7 @@ class DiscussionController extends ContentController
     {
         $discussion = $this->bound($id);
 
-        return view('discussion::response.edit', [
+        return view('discussions::response.edit', [
             'discussion' => $discussion,
         ]);
     }
