@@ -22,6 +22,30 @@ class DiscussionSeeder extends Seeder
                 ['parent-id', 'content-type'],
             ]
         ],
+        [
+            'key' => 'discussion-menu',
+            'title' => 'Discussion Navigation Menu',
+            'content' => '',
+            'relations' => [
+                ['content-type', 'menu'],
+                ['parent-id', 'admin-menu'],
+            ]
+        ],
+        [
+            'key' => 'discussion-index',
+            'title' => 'Discussions',
+            'content' => 'discussions.topic.index',
+            'meta' => [
+                'type' => 'route',
+                'class' => 'item',
+                'append' => '</span>',
+                'prepend' => '<i class="talk left icon"></i><span class="collapseable-text">',
+            ],
+            'relations' => [
+                ['content-type', 'menu-item'],
+                ['parent-id', 'discussion-menu'],
+            ]
+        ]
     ];
 
     /**

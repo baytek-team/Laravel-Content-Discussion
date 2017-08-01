@@ -15,7 +15,7 @@
     <a class="item @if($filter && $filter == 'active') active @endif" href="{{ route('discussion.index') }}">{{ ___('Active') }}</a>
     <a class="item @if($filter && $filter == 'deleted') active @endif" href="{{ route('discussion.deleted') }}">{{ ___('Deleted') }}</a>
 </div>
-<table class="ui selectable table">
+<table class="ui selectable very basic table">
     <thead>
         <tr>
             <th class="nine wide">{{ ___('Response') }}</th>

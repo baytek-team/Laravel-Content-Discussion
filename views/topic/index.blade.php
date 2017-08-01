@@ -22,7 +22,7 @@
     <a class="item @if($filter && $filter == 'pending') active @endif" href="{{ route('discussion.topic.pending') }}">{{ ___('Pending') }}</a>
     <a class="item @if($filter && $filter == 'deleted') active @endif" href="{{ route('discussion.topic.deleted') }}">{{ ___('Deleted') }}</a>
 </div>
-<table class="ui selectable table">
+<table class="ui selectable very basic table">
     <thead>
         <tr>
             <th class="seven wide">{{ ___('Title') }}</th>
