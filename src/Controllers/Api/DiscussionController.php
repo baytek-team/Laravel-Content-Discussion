@@ -8,7 +8,7 @@ use Baytek\Laravel\Content\Types\Discussion\Scopes\ApprovedDiscussionScope;
 use Baytek\Laravel\Content\Controllers\ContentController;
 use Baytek\Laravel\Content\Models\Scopes\TranslationScope;
 // use App\Events\DiscussionCreated;
-// use App\Events\DiscussionShared;
+use Baytek\Laravel\Content\Types\Discussion\Events\DiscussionShared;
 use Baytek\Laravel\Content\Types\Discussion\Requests\DiscussionRequest;
 use Baytek\Laravel\Content\Types\Discussion\Requests\ResponseRequest;
 
@@ -292,7 +292,7 @@ class DiscussionController extends ApiController
     public function share(Request $request, $topic, $discussion)
     {
         // Trigger the share event to send an email to the user
-        // event(new DiscussionShared($request, $this->discussion($topic, $discussion)->first(), $topic));
+        event(new DiscussionShared($request, $this->discussion($topic, $discussion)->first(), $topic));
 
         return response()->json([
             'status' => 'success',
