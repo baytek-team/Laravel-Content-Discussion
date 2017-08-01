@@ -2,10 +2,10 @@
 
 namespace Baytek\Laravel\Content\Types\Discussion\Requests;
 
-use Illuminate\Http\Request;
-use Baytek\Laravel\Content\Models\Content;
+// use Illuminate\Http\Request;
+use Illuminate\Foundation\Http\FormRequest;
 
-class TopicRequest extends Request
+class TopicRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.

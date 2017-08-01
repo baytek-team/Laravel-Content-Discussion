@@ -2,10 +2,10 @@
 
 namespace Baytek\Laravel\Content\Types\Discussion\Requests;
 
-use Baytek\Laravel\Content\Models\Content;
-use Illuminate\Http\Request;
+use Illuminate\Foundation\Http\FormRequest;
+// use Illuminate\Http\Request;
 
-class DiscussionRequest extends Request
+class DiscussionRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -25,7 +25,7 @@ class DiscussionRequest extends Request
     public function rules()
     {
         return [
-            'title' => 'required|unique_key:contents,parent_id',
+            'title' => 'sometimes|required|unique_key:contents,parent_id',
             'content' => 'required',
             'parent_id' => 'sometimes|exists:contents,id',
         ];

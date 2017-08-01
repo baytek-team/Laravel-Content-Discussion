@@ -8,7 +8,7 @@ use Baytek\Laravel\Content\Types\Discussion\Scopes\ApprovedDiscussionScope;
 use Baytek\Laravel\Content\Controllers\ContentController;
 use Baytek\Laravel\Content\Models\Scopes\TranslationScope;
 // use App\Events\DiscussionCreated;
-// use App\Events\DiscussionShared;
+use Baytek\Laravel\Content\Types\Discussion\Events\DiscussionShared;
 use Baytek\Laravel\Content\Types\Discussion\Requests\DiscussionRequest;
 use Baytek\Laravel\Content\Types\Discussion\Requests\ResponseRequest;
 
@@ -24,7 +24,7 @@ class DiscussionController extends ApiController
 {
     public function index()
     {
-    	return Discussion::all()->load('meta');
+        return Discussion::all()->load('meta');
     }
 
     public function latest()
@@ -143,15 +143,14 @@ class DiscussionController extends ApiController
 
         $response = $content->contentStore($request);
         $response->saveRelation('parent-id', $discussion->id);
-        //$response->saveMetadata('author_id', Auth::id());
 
         //Approve response automatically
         $response->onBit(Discussion::APPROVED)->update();
         $response->children = [];
 
         //Increment the ancestor Discussion (either parent or grandparent) response count
-        $ancestor = $this->discussion($request->ancestor['topic'], $request->ancestor['key'])->first();
-        $ancestor->saveMetadata('response_count', (int)$ancestor->metadata('response_count') + 1);
+        $ancestor = content($request->ancestor_id, true, Discussion::class)->load('meta');
+        $ancestor->saveMetadata('response_count', (int)$ancestor->getMeta('response_count') + 1);
 
         //Send the response
         $message = ___('Discussion successfully created.');
@@ -222,12 +221,16 @@ class DiscussionController extends ApiController
      */
     public function topicDiscussions($topic, $options = null)
     {
-        $discussions = Discussion::childrenOf($topic)
+        //Get the topic
+        $topic = Topic::where('key', $topic)->first();
+
+        $discussions = Discussion::childrenOf($topic->id)
             ->withoutGlobalScope(TranslationScope::class)
             ->withStatus('r', Discussion::APPROVED)
             ->options($options)
             ->withContents()
-            ->get();
+            ->latest('r.created_at')
+            ->paginate(5);
 
         return $discussions->count() ? $discussions: abort(404);
     }
@@ -289,7 +292,7 @@ class DiscussionController extends ApiController
     public function share(Request $request, $topic, $discussion)
     {
         // Trigger the share event to send an email to the user
-        // event(new DiscussionShared($request, $this->discussion($topic, $discussion)->first(), $topic));
+        event(new DiscussionShared($request, $this->discussion($topic, $discussion)->first(), $topic));
 
         return response()->json([
             'status' => 'success',
@@ -330,6 +333,20 @@ class DiscussionController extends ApiController
             ->options($options)
             ->withStatus('r', Discussion::APPROVED)
             ->paginate(5);
+
+        return $discussions->count() ? $discussions: abort(404);
+    }
+
+    /**
+     * Return three top-level discussions
+     */
+    public function dashboard()
+    {
+        $discussions = Discussion::childrenOfType(Topic::all(), 'discussion')
+            ->withContents()
+            ->withStatus('r', Discussion::APPROVED)
+            ->latest('r.created_at')
+            ->paginate(3);
 
         return $discussions->count() ? $discussions: abort(404);
     }

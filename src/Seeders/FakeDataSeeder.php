@@ -23,54 +23,93 @@ class FakeDataSeeder extends Seeder
 
     public function generateDiscussionTopics($total = 10)
     {
-    	$content_type = content('content-type/discussion-topic', false);
+        $content_type = content('content-type/discussion-topic', false);
 
-    	foreach(range(1,$total) as $index) {
-    		$topic = (factory(Topic::class)->make());
-    		$topic->save();
+        foreach(range(1,$total) as $index) {
+            $topic = (factory(Topic::class)->make());
+            $topic->save();
 
-    		//Add relationships
-    		$topic->saveRelation('content-type', $content_type);
-    		$topic->saveRelation('parent-id', $content_type);
+            //Add relationships
+            $topic->saveRelation('content-type', $content_type);
+            $topic->saveRelation('parent-id', $content_type);
 
-    		//Add metadata
-    		$topic->saveMetadata('author_id', 1);
-    	}
+            //Add metadata
+            $topic->saveMetadata('author_id', 1);
+        }
     }
 
     public function generateDiscussions($total = 100)
     {
-    	//Generate discussions
-    	//Assign them to a topic or an existing discussion
-    	$content_type = content('content-type/discussion', false);
-    	$topics = Topic::all();
-    	$members = User::all();
-    	$discussion_ids = collect([]);
+        //Generate discussions
+        //Assign them to a topic or an existing discussion
+        $content_type = content('content-type/discussion', false);
+        $topics = Topic::all();
+        $members = User::all();
+        $discussions = collect([]);
+        $ancestor_ids = collect([]);
 
-    	foreach(range(1,$total) as $index) {
-    		//Choose a parent at random
-    		//Can choose from discussions if any exist
-    		if ($index > $total/10) {
-    			$parent_id = rand(0,2) ? $discussion_ids->random() : $topics->random()->id;
-    		}
-    		else {
-    			$parent_id = $topics->random()->id;
-    		}
+        $earliest_date = time() - (7*24*60*60); //1 week ago
+        $latest_date = time(); //Now
 
-    		$discussion = (factory(Discussion::class)->make());
-    		$discussion->save();
+        foreach(range(1,$total) as $index) {
+            $discussion = (factory(Discussion::class)->make());
 
-    		//Add relationships
-    		$discussion->saveRelation('content-type', $content_type);
-    		$discussion->saveRelation('parent-id', $parent_id);
+            //Vary the dates, make some appear edited
+            $discussion->created_at = $this->randomDate($earliest_date, $latest_date);
+            $discussion->updated_at = rand(0,5) ? $discussion->created_at : date('Y-m-d H:i:s', $latest_date);
 
-    		//Add metadata
-    		$discussion->saveMetadata('author_id', $members->random()->id);
+            //Save the discussion
+            $discussion->save();
+            $ancestor = null;
 
-    		//Store the discussion IDs that can be used as parent_ids
-    		$discussion_ids->push($discussion->id);
-    	}
+            //Choose a parent at random
+            //Can choose from discussions if any exist
+            if ($index > $total/10 && rand(0,2)) {
+                $parent = $discussions->random();
 
-    	//Change some of the updated_at timestamps, so the discussions will appear edited
+                //Update the respnose count
+                $ancestor = $parent;
+                $parent_relation_id = content('parent-id', false);
+
+                while ($ancestor_ids->search($ancestor->id) === false) {
+                    foreach($ancestor->relations()->get() as $relation) {
+                        if ($relation->relation_type_id == $parent_relation_id ) {
+                            $ancestor = $discussions->where('id', $relation->relation_id)->first();
+                        }
+                    }
+                }
+
+                $ancestor->load('meta');
+                $response_count = (int)$ancestor->getMeta('response_count');
+
+                $ancestor->saveMetadata('response_count', (int)$ancestor->getMeta('response_count') + 1);
+            }
+            else {
+                $parent = $topics->random();
+                $ancestor_ids->push($discussion->id);
+            }
+
+            //Add relationships
+            $discussion->saveRelation('content-type', $content_type);
+            $discussion->saveRelation('parent-id', $parent->id);
+
+            //Add metadata
+            $discussion->saveMetadata('author_id', $members->random()->id);
+            $discussion->saveMetadata('response_count', 0);
+
+            //Store the discussion IDs that can be used as parent_ids
+            //But only if the discussion is top level or a reply
+            if (!$ancestor || $ancestor->id == $parent->id) {
+              $discussions->push($discussion);
+            }
+
+            //Update the earliest date so all discussions will be created after it
+            $earliest_date = strtotime($discussion->created_at);
+        }
+    }
+
+    protected function randomDate($start, $end)
+    {
+        return date('Y-m-d H:i:s', rand($start, $end));
     }
 }
