@@ -143,15 +143,14 @@ class DiscussionController extends ApiController
 
         $response = $content->contentStore($request);
         $response->saveRelation('parent-id', $discussion->id);
-        //$response->saveMetadata('author_id', Auth::id());
 
         //Approve response automatically
         $response->onBit(Discussion::APPROVED)->update();
         $response->children = [];
 
         //Increment the ancestor Discussion (either parent or grandparent) response count
-        $ancestor = $this->discussion($request->ancestor['topic'], $request->ancestor['key'])->first();
-        $ancestor->saveMetadata('response_count', (int)$ancestor->metadata('response_count') + 1);
+        $ancestor = content($request->ancestor_id, true, Discussion::class)->load('meta');
+        $ancestor->saveMetadata('response_count', (int)$ancestor->getMeta('response_count') + 1);
 
         //Send the response
         $message = ___('Discussion successfully created.');
