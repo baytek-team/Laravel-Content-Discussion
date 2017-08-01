@@ -229,6 +229,7 @@ class DiscussionController extends ApiController
             ->withStatus('r', Discussion::APPROVED)
             ->options($options)
             ->withContents()
+            ->latest('r.created_at')
             ->paginate(5);
 
         return $discussions->count() ? $discussions: abort(404);
