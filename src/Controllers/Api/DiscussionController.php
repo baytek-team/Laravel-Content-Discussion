@@ -24,7 +24,7 @@ class DiscussionController extends ApiController
 {
     public function index()
     {
-    	return Discussion::all()->load('meta');
+        return Discussion::all()->load('meta');
     }
 
     public function latest()
@@ -222,12 +222,15 @@ class DiscussionController extends ApiController
      */
     public function topicDiscussions($topic, $options = null)
     {
-        $discussions = Discussion::childrenOf($topic)
+        //Get the topic
+        $topic = Topic::where('key', $topic)->first();
+
+        $discussions = Discussion::childrenOf($topic->id)
             ->withoutGlobalScope(TranslationScope::class)
             ->withStatus('r', Discussion::APPROVED)
             ->options($options)
             ->withContents()
-            ->get();
+            ->paginate(5);
 
         return $discussions->count() ? $discussions: abort(404);
     }
