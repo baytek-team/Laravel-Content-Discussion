@@ -25,7 +25,7 @@ class DiscussionRequest extends FormRequest
     public function rules()
     {
         return [
-            'title' => 'required|unique_key:contents,parent_id',
+            'title' => 'sometimes|required|unique_key:contents,parent_id',
             'content' => 'required',
             'parent_id' => 'sometimes|exists:contents,id',
         ];
