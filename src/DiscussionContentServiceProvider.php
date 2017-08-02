@@ -79,7 +79,7 @@ class DiscussionContentServiceProvider extends AuthServiceProvider
         });
 
         //Register factories
-        $this->app->make('Illuminate\Database\Eloquent\Factory')->load(__DIR__ . '/../database/Factories');
+        $this->app->make('Illuminate\Database\Eloquent\Factory')->load(__DIR__ . '/../database/factories');
 
     }
 
