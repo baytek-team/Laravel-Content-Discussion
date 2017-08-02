@@ -24,7 +24,7 @@ Route::group([
 		->where('options', '.*?');
 
 	// Gets a list of discussions submitted by a member
-	Route::get('/member/{member}', 'Discussions\Controllers\Api\DiscussionController@byMember');
+	Route::get('/member/{member}', 'DiscussionController@byMember');
 
 	// Gets a list of all discussions regardless of status
 	Route::get('/all', 'DiscussionController@all');
