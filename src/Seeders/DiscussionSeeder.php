@@ -34,7 +34,7 @@ class DiscussionSeeder extends Seeder
         [
             'key' => 'discussion-index',
             'title' => 'Discussions',
-            'content' => 'discussions.topic.index',
+            'content' => 'discussion.topic.index',
             'meta' => [
                 'type' => 'route',
                 'class' => 'item',
