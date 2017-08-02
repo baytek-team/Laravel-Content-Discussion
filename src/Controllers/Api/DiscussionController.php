@@ -360,6 +360,7 @@ class DiscussionController extends ApiController
             ->options($options)
             ->withContents()
             ->withStatus('r', Discussion::APPROVED)
+            ->latest('r.created_at')
             ->paginate(5);
 
         return $discussions;
