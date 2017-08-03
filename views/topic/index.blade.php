@@ -1,27 +1,26 @@
 @extends('discussions::topic.template')
 
 @section('page.head.menu')
-    <div class="ui secondary menu">
-        <div class="right item">
+    <div class="ui secondary contextual menu">
+        <div class="header item">
+            <i class="filter icon"></i>
+            {{ ___('Filter By') }}
+        </div>
+        <a class="item @if($filter && $filter == 'active') active @endif" href="{{ route('discussion.topic.index') }}">{{ ___('Active') }}</a>
+        <a class="item @if($filter && $filter == 'pending') active @endif" href="{{ route('discussion.topic.pending') }}">{{ ___('Pending') }}</a>
+        <a class="item @if($filter && $filter == 'deleted') active @endif" href="{{ route('discussion.topic.deleted') }}">{{ ___('Deleted') }}</a>
+
+        <div class="item">
             @if(Auth::user()->can('Create Discussion'))
-            <a class="ui primary button" href="{{ route('discussion.topic.create') }}">
-                <i class="add icon"></i>{{ ___('Add Topic') }}
-            </a>
+                <a class="ui primary button" href="{{ route('discussion.topic.create') }}">
+                    <i class="add icon"></i>{{ ___('Add Topic') }}
+                </a>
             @endif
         </div>
     </div>
 @endsection
 
 @section('content')
-<div class="ui text menu">
-    <div class="header item">
-        <i class="filter icon"></i>
-        {{ ___('Filter By') }}
-    </div>
-    <a class="item @if($filter && $filter == 'active') active @endif" href="{{ route('discussion.topic.index') }}">{{ ___('Active') }}</a>
-    <a class="item @if($filter && $filter == 'pending') active @endif" href="{{ route('discussion.topic.pending') }}">{{ ___('Pending') }}</a>
-    <a class="item @if($filter && $filter == 'deleted') active @endif" href="{{ route('discussion.topic.deleted') }}">{{ ___('Deleted') }}</a>
-</div>
 <table class="ui selectable very basic table">
     <thead>
         <tr>
