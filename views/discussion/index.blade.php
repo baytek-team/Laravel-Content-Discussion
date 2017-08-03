@@ -1,8 +1,14 @@
 @extends('discussions::discussion.template')
 
 @section('page.head.menu')
-    <div class="ui secondary menu">
-        <div class="right item">
+    <div class="ui secondary contextual menu">
+        <div class="header item">
+            <i class="filter icon"></i>
+            {{ ___('Filter By') }}
+        </div>
+        <a class="item @if($filter && $filter == 'active') active @endif" href="{{ route('discussion.index') }}">{{ ___('Active') }}</a>
+        <a class="item @if($filter && $filter == 'deleted') active @endif" href="{{ route('discussion.deleted') }}">{{ ___('Deleted') }}</a>
+        <div class="item">
             @if(Auth::user()->can('Create Discussion'))
             <a class="ui primary button" href="{{ route('discussion.create') }}">
                 <i class="add icon"></i>{{ ___('Add Discussion') }}
@@ -13,14 +19,6 @@
 @endsection
 
 @section('content')
-<div class="ui text menu">
-    <div class="header item">
-        <i class="filter icon"></i>
-        {{ ___('Filter By') }}
-    </div>
-    <a class="item @if($filter && $filter == 'active') active @endif" href="{{ route('discussion.index') }}">{{ ___('Active') }}</a>
-    <a class="item @if($filter && $filter == 'deleted') active @endif" href="{{ route('discussion.deleted') }}">{{ ___('Deleted') }}</a>
-</div>
 <table class="ui selectable very basic table">
     <thead>
         <tr>
@@ -57,8 +55,8 @@
                 <td>{{ $discussion->created_at }}</td>
                 <td class="right aligned collapsing">
                     <div class="ui compact text menu">
-                        <a href="{{ route('discussion.children', $discussion->id) }}" class="item"><i class="comments icon"></i>{{ ___('Responses') }}</a>
-                        <a href="{{ route('discussion.edit', $discussion->id) }}" class="item"><i class="pencil icon"></i>{{ ___('Edit') }}</a>
+                        <a href="{{ route('discussion.children', $discussion->id) }}" class="item"><i class="comments icon"></i>{{-- {{ ___('Responses') }} --}}</a>
+                        <a href="{{ route('discussion.edit', $discussion->id) }}" class="item"><i class="pencil icon"></i>{{-- {{ ___('Edit') }} --}}</a>
                     </div>
                 </td>
             </tr>

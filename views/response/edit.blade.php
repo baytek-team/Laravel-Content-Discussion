@@ -34,9 +34,9 @@
         ])
     @endif
 
-    @endsection
+@endsection
 
-    @section('content')
+@section('content')
     <div id="registration" class="ui container">
         <div class="ui hidden divider"></div>
         <form action="{{ route('discussion.updateResponse', $discussion->id) }}" method="POST" class="ui form">

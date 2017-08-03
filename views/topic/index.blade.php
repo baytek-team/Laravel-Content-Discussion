@@ -37,9 +37,9 @@
                 <td>{{ $topic->created_at }}</td>
                 <td class="right aligned collapsing">
                     <div class="ui compact text menu">
-                        <a href="{{ route( 'discussion.index', $topic->id) }}" class="item"><i class="comments icon"></i> {{ ___('Discussions') }}</a>
-                        <a href="{{ route('discussion.topic.edit', $topic->id) }}" class="item"><i class="pencil icon"></i> {{ ___('En Button') }}</a>
-                        @if(is_null($topic->translation()))
+                        <a href="{{ route( 'discussion.index', $topic->id) }}" class="item"><i class="comments icon"></i> {{-- {{ ___('Discussions') }} --}}</a>
+                        <a href="{{ route('discussion.topic.edit', $topic->id) }}" class="item"><i class="pencil icon"></i> {{-- {{ ___('En Button') }} --}}</a>
+                        {{-- @if(is_null($topic->translation()))
                             <a class="item" href="{{ route('translation.edit', $topic->id) }}">
                                 <i class="add icon"></i>
                                 {{ ___('Fr Button') }}
@@ -49,7 +49,7 @@
                                 <i class="pencil icon"></i>
                                 {{ ___('Fr Button') }}
                             </a>
-                        @endif
+                        @endif --}}
                     </div>
                 </td>
             </tr>
