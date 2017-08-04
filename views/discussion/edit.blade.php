@@ -33,12 +33,9 @@
             'confirm' => ___('Delete/Reject this discussion?')
         ])
     @endif
-
-    @endsection
+@endsection
 
     @section('content')
-    <div id="registration" class="ui container">
-        <div class="ui hidden divider"></div>
         <form action="{{ route('discussion.update', $discussion->id) }}" method="POST" class="ui form">
             {{ csrf_field() }}
             {{ method_field('PUT') }}
@@ -61,5 +58,4 @@
                 </button>
             </div>
         </form>
-    </div>
 @endsection
