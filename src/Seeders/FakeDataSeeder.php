@@ -23,7 +23,7 @@ class FakeDataSeeder extends Seeder
 
     public function generateDiscussionTopics($total = 10)
     {
-        $content_type = content('content-type/discussion-topic', false);
+        $content_type = content_id('content-type/discussion-topic');
 
         foreach(range(1,$total) as $index) {
             $topic = (factory(Topic::class)->make());
@@ -42,7 +42,7 @@ class FakeDataSeeder extends Seeder
     {
         //Generate discussions
         //Assign them to a topic or an existing discussion
-        $content_type = content('content-type/discussion', false);
+        $content_type = content_id('content-type/discussion');
         $topics = Topic::all();
         $members = User::all();
         $discussions = collect([]);
@@ -69,7 +69,7 @@ class FakeDataSeeder extends Seeder
 
                 //Update the respnose count
                 $ancestor = $parent;
-                $parent_relation_id = content('parent-id', false);
+                $parent_relation_id = content_id('parent-id');
 
                 while ($ancestor_ids->search($ancestor->id) === false) {
                     foreach($ancestor->relations()->get() as $relation) {
