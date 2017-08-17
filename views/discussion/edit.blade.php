@@ -23,6 +23,7 @@
             {{ ___('Deleted') }}
         </a>
     @else
+        @can('Delete Discussion')
         @button(___('Delete'), [
             'method' => 'post',
             'location' => 'discussion.decline',
@@ -32,6 +33,7 @@
             'model' => $discussion,
             'confirm' => ___('Delete/Reject this discussion?')
         ])
+        @endcan
     @endif
 @endsection
 

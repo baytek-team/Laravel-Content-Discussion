@@ -35,7 +35,11 @@
                             <div class="content">
                                 <div class="header">
                                     @if($discussion->metadata('author_id'))
+                                        @can('Update Member')
                                         <a href="{{ route( 'members.edit', $discussion->metadata('author_id')) }}">{{ $discussion->metadata('author_id')->name }}</a>
+                                        @else
+                                        {{ $discussion->metadata('author_id')->name }}
+                                        @endcan
                                     @else
                                         {{ __('Unknown Author') }}
                                     @endif
@@ -52,10 +56,12 @@
                         <i class="comments icon"></i>
                         {{ ___('Responses') }}
                     </a>
+                    @can('Update Discussion')
                     <a href="{{ route('discussion.editResponse', $discussion->id) }}" class="ui icon @if($discussion->hasStatus($discussion::DELETED)) basic negative @endif button">
                         <i class="pencil icon"></i>
                         {{ ___('Edit') }}
                     </a>
+                    @endcan
                 </td>
             </tr>
         @empty
