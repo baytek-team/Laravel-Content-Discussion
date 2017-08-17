@@ -11,7 +11,7 @@
         <a class="item @if($filter && $filter == 'deleted') active @endif" href="{{ route('discussion.topic.deleted') }}">{{ ___('Deleted') }}</a>
 
         <div class="item">
-            @can('Create Topic'))
+            @can('Create Topic')
                 <a class="ui primary button" href="{{ route('discussion.topic.create') }}">
                     <i class="add icon"></i>{{ ___('Add Topic') }}
                 </a>
