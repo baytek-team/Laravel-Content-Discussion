@@ -9,7 +9,7 @@
         <a class="item @if($filter && $filter == 'active') active @endif" href="{{ route('discussion.index') }}">{{ ___('Active') }}</a>
         <a class="item @if($filter && $filter == 'deleted') active @endif" href="{{ route('discussion.deleted') }}">{{ ___('Deleted') }}</a>
         <div class="item">
-            @can('Create Discussion'))
+            @can('Create Discussion')
             <a class="ui primary button" href="{{ route('discussion.create') }}">
                 <i class="add icon"></i>{{ ___('Add Discussion') }}
             </a>

@@ -11,11 +11,11 @@
         <a class="item @if($filter && $filter == 'deleted') active @endif" href="{{ route('discussion.topic.deleted') }}">{{ ___('Deleted') }}</a>
 
         <div class="item">
-            @if(Auth::user()->can('Create Discussion'))
+            @can('Create Topic'))
                 <a class="ui primary button" href="{{ route('discussion.topic.create') }}">
                     <i class="add icon"></i>{{ ___('Add Topic') }}
                 </a>
-            @endif
+            @endcan
         </div>
     </div>
 @endsection
@@ -38,8 +38,13 @@
                     <td>{{ $topic->created_at }}</td>
                     <td class="right aligned collapsing">
                         <div class="ui compact text menu">
-                            <a href="{{ route( 'discussion.index', $topic->id) }}" class="item"><i class="comments icon"></i> {{-- {{ ___('Discussions') }} --}}</a>
+                            @can('View Discussion')
+                            <a href="{{ route( 'discussion.index', $topic->id) }}" class="item"><i class="comments icon"></i>
+                            @endcan
+                            {{-- {{ ___('Discussions') }} --}}</a>
+                            @can('Update Topic')
                             <a href="{{ route('discussion.topic.edit', $topic->id) }}" class="item"><i class="pencil icon"></i> {{-- {{ ___('En Button') }} --}}</a>
+                            @endcan
                             {{-- @if(is_null($topic->translation()))
                                 <a class="item" href="{{ route('translation.edit', $topic->id) }}">
                                     <i class="add icon"></i>
