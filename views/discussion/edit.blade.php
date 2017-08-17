@@ -17,24 +17,24 @@
             'confirm' => ___('Approve this discussion?')
         ])
     @endif
-    @if($discussion->hasStatus($discussion::DELETED))
-        <a class="ui disabled button">
-            <i class="delete icon"></i>
-            {{ ___('Deleted') }}
-        </a>
-    @else
-        @can('Delete Discussion')
-        @button(___('Delete'), [
-            'method' => 'post',
-            'location' => 'discussion.decline',
-            'type' => 'route',
-            'class' => 'ui action negative button',
-            'prepend' => '<i class="delete icon"></i>',
-            'model' => $discussion,
-            'confirm' => ___('Delete/Reject this discussion?')
-        ])
-        @endcan
-    @endif
+    @can('Delete Discussion')
+        @if($discussion->hasStatus($discussion::DELETED))
+            <a class="ui disabled button">
+                <i class="delete icon"></i>
+                {{ ___('Deleted') }}
+            </a>
+        @else
+            @button(___('Delete'), [
+                'method' => 'post',
+                'location' => 'discussion.decline',
+                'type' => 'route',
+                'class' => 'ui action negative button',
+                'prepend' => '<i class="delete icon"></i>',
+                'model' => $discussion,
+                'confirm' => ___('Delete/Reject this discussion?')
+            ])
+        @endif
+    @endcan
 @endsection
 
     @section('content')
