@@ -26,8 +26,8 @@ class DiscussionContentServiceProvider extends AuthServiceProvider
      * @var [type]
      */
     protected $policies = [
-        Discussion::class => Policies\DiscussionPolicy::class,
-        Topic::class => Policies\TopicPolicy::class,
+        Models\Discussion::class => Policies\DiscussionPolicy::class,
+        Models\Topic::class => Policies\TopicPolicy::class,
     ];
 
     /**
