@@ -39,7 +39,7 @@
                     <td class="right aligned collapsing">
                         <div class="ui compact text menu">
                             @can('View Discussion')
-                            <a href="{{ route( 'discussion.index', $topic->id) }}" class="item"><i class="comments icon"></i>
+                            <a href="{{ route( 'discussion.index') }}" class="item"><i class="comments icon"></i>
                             @endcan
                             {{-- {{ ___('Discussions') }} --}}</a>
                             @can('Update Topic')
