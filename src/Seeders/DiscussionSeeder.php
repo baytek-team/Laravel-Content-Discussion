@@ -40,6 +40,7 @@ class DiscussionSeeder extends Seeder
                 'class' => 'item',
                 'append' => '</span>',
                 'prepend' => '<i class="talk left icon"></i><span class="collapseable-text">',
+                'permission' => 'View Topic',
             ],
             'relations' => [
                 ['content-type', 'menu-item'],

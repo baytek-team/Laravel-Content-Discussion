@@ -7,10 +7,12 @@
             {{ ___('Approved') }}
         </a>
     @elseif($topic->hasStatus($topic::DELETED))
-        <a class="ui disabled button">
-            <i class="delete icon"></i>
-            {{ ___('Deleted') }}
-        </a>
+        @can('Delete Topic')
+            <a class="ui disabled button">
+                <i class="delete icon"></i>
+                {{ ___('Deleted') }}
+            </a>
+        @endcan
     @else
         @button(___('Approve'), [
             'method' => 'post',
@@ -22,15 +24,17 @@
             'confirm' => ___('Approve this discussion topic? This action cannot be undone.')
         ])
 
-        @button(___('Delete'), [
-            'method' => 'post',
-            'location' => 'discussion.topic.decline',
-            'type' => 'route',
-            'class' => 'ui action button',
-            'prepend' => '<i class="delete icon"></i>',
-            'model' => $topic,
-            'confirm' => ___('Delete/Reject this discussion topic? This action cannot be undone.')
-        ])
+        @can('Delete Topic')
+            @button(___('Delete'), [
+                'method' => 'post',
+                'location' => 'discussion.topic.decline',
+                'type' => 'route',
+                'class' => 'ui action button',
+                'prepend' => '<i class="delete icon"></i>',
+                'model' => $topic,
+                'confirm' => ___('Delete/Reject this discussion topic? This action cannot be undone.')
+            ])
+        @endcan
     @endif
 
     @endsection

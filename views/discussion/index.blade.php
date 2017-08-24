@@ -9,11 +9,11 @@
         <a class="item @if($filter && $filter == 'active') active @endif" href="{{ route('discussion.index') }}">{{ ___('Active') }}</a>
         <a class="item @if($filter && $filter == 'deleted') active @endif" href="{{ route('discussion.deleted') }}">{{ ___('Deleted') }}</a>
         <div class="item">
-            @if(Auth::user()->can('Create Discussion'))
+            @can('Create Discussion')
             <a class="ui primary button" href="{{ route('discussion.create') }}">
                 <i class="add icon"></i>{{ ___('Add Discussion') }}
             </a>
-            @endif
+            @endcan
         </div>
     </div>
 @endsection
@@ -56,7 +56,9 @@
                     <td class="right aligned collapsing">
                         <div class="ui compact text menu">
                             <a href="{{ route('discussion.children', $discussion->id) }}" class="item"><i class="comments icon"></i>{{-- {{ ___('Responses') }} --}}</a>
+                            @can('Update Discussion')
                             <a href="{{ route('discussion.edit', $discussion->id) }}" class="item"><i class="pencil icon"></i>{{-- {{ ___('Edit') }} --}}</a>
+                            @endcan
                         </div>
                     </td>
                 </tr>
