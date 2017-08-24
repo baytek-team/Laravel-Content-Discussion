@@ -175,7 +175,9 @@ class DiscussionController extends ContentController
     {
         $this->redirects = false;
 
-        $request->merge(['content' => nl2br(trim($request->get('content')))]);
+        $request->merge([
+            'content' => nl2br(trim($request->get('content')))
+        ]);
 
         $discussion = parent::contentUpdate($request, $id);
         $discussion->removeRelationByType('parent-id');

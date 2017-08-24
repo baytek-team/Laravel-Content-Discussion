@@ -226,7 +226,7 @@ class DiscussionController extends ApiController
 
         $discussions = Discussion::childrenOf($topic->id)
             ->withoutGlobalScope(TranslationScope::class)
-            ->withStatus('r', Discussion::APPROVED)
+            ->withStatus(Discussion::APPROVED)
             ->options($options)
             ->withContents()
             ->latest('r.created_at')
@@ -318,7 +318,7 @@ class DiscussionController extends ApiController
                 ->orWhere('r.content', 'like', '%'.$query.'%');
             })
             ->options($options)
-            ->withStatus('r', Discussion::APPROVED)
+            ->withStatus(Discussion::APPROVED)
             ->paginate(5);
 
         return $discussions->count() ? $discussions: abort(404);
@@ -331,7 +331,7 @@ class DiscussionController extends ApiController
     {
         $discussions = Discussion::childrenOfType(Topic::all(), 'discussion')
             ->options($options)
-            ->withStatus('r', Discussion::APPROVED)
+            ->withStatus(Discussion::APPROVED)
             ->paginate(5);
 
         return $discussions->count() ? $discussions: abort(404);
@@ -344,7 +344,7 @@ class DiscussionController extends ApiController
     {
         $discussions = Discussion::childrenOfType(Topic::all(), 'discussion')
             ->withContents()
-            ->withStatus('r', Discussion::APPROVED)
+            ->withStatus(Discussion::APPROVED)
             ->latest('r.created_at')
             ->paginate(3);
 
@@ -359,7 +359,7 @@ class DiscussionController extends ApiController
         $discussions = Discussion::childenOfTypeWhereMetadata(Topic::all(), 'discussion', 'author_id', $member)
             ->options($options)
             ->withContents()
-            ->withStatus('r', Discussion::APPROVED)
+            ->withStatus(Discussion::APPROVED)
             ->latest('r.created_at')
             ->paginate(5);
 

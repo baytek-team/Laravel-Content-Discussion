@@ -46,7 +46,7 @@ class Discussion extends Content
 
     public function getRouteKeyName()
     {
-        return 'id';
+        return 'contents.id';
     }
 
     public function setAuthorIdMetadata($id)
@@ -133,7 +133,7 @@ class Discussion extends Content
      */
     public function scopeApproved($query)
     {
-        return $query->withStatus('contents', Discussion::APPROVED);
+        return $query->withStatus(Discussion::APPROVED);
     }
 
     /**
@@ -144,7 +144,7 @@ class Discussion extends Content
      */
     public function scopeDeleted($query)
     {
-        return $query->withStatus('contents', Discussion::DELETED);
+        return $query->withStatus(Discussion::DELETED);
     }
 
     // /**

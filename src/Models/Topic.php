@@ -47,7 +47,7 @@ class Topic extends Content
      */
     public function scopeApproved($query)
     {
-        return $query->withStatus('contents', Topic::APPROVED);
+        return $query->withStatus(Topic::APPROVED);
     }
 
     /**
@@ -58,7 +58,7 @@ class Topic extends Content
      */
     public function scopePending($query)
     {
-        return $query->withStatus('contents', ['exclude' => [Topic::APPROVED, Topic::DELETED]]);
+        return $query->withStatus(['exclude' => [Topic::APPROVED, Topic::DELETED]]);
     }
 
     /**
@@ -69,13 +69,13 @@ class Topic extends Content
      */
     public function scopeDeleted($query)
     {
-        return $query->withStatus('contents', Topic::DELETED);
+        return $query->withStatus(Topic::DELETED);
     }
 
     public function setDiscussionCountMetadata()
     {
 
-        return $this->childrenOfType($this->key, 'discussion')->withStatus('r', Discussion::APPROVED)->count();
+        return $this->childrenOfType($this->key, 'discussion')->withStatus(Discussion::APPROVED)->count();
 
         // if(Cache::has('category.' . $this->id . '.count')) {
         //  return Cache::get('category.' . $this->id . '.count');
