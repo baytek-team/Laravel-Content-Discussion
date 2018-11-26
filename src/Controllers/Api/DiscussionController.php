@@ -222,7 +222,7 @@ class DiscussionController extends ApiController
     public function topicDiscussions($topic, $options = null)
     {
         //Get the topic
-        $topic = Topic::where('key', $topic)->first();
+        $topic = Topic::where('contents.key', $topic)->first();
 
         $discussions = Discussion::childrenOf($topic->id)
             ->withoutGlobalScope(TranslationScope::class)
