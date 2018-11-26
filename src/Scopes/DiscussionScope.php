@@ -17,6 +17,6 @@ class DiscussionScope implements Scope
      */
     public function apply(Builder $builder, Model $model)
     {
-        $builder->with(['relations', 'relations.relation', 'relations.relationType', 'meta']);
+        $builder->ofType('discussion');
     }
 }

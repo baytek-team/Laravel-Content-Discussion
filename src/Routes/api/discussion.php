@@ -45,11 +45,11 @@ Route::group([
 	Route::get('/{topic}', 'TopicController@get');
 
 	// Get a list of discussions for a specific discussion topic
-	Route::get('/{topic}', 'DiscussionController@topicDiscussions')
+	Route::get('/{topic}', 'TopicController@discussions')
 		->where(['topic' => $categoryRegex]);
 
 	// Get resources with all sorting, offsetting and limiting options
-	Route::get('/{topic}/options/{options?}', 'DiscussionController@topicDiscussions')
+	Route::get('/{topic}/options/{options?}', 'TopicController@discussions')
 		->where(['topic' => $categoryRegex])
 		->where('options', '.*?');
 

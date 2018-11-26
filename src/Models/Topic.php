@@ -3,6 +3,7 @@
 namespace Baytek\Laravel\Content\Types\Discussion\Models;
 
 use Baytek\Laravel\Content\Types\Discussion\Models\Discussion;
+
 use Baytek\Laravel\Content\Types\Discussion\Scopes\TopicScope;
 use Baytek\Laravel\Content\Types\Discussion\Scopes\ApprovedTopicScope;
 
@@ -40,6 +41,17 @@ class Topic extends Content
     }
 
     /**
+     * Get the discussions belonging to this topic
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function discussions()
+    {
+        return $this->belongsToMany(Discussion::class, 'content_relations', 'relation_id', 'content_id')
+            ->wherePivot('relation_type_id', content('relation-type/parent-id', false));
+    }
+
+    /**
      * Scope a query to only include approved resources.
      *
      * @param \Illuminate\Database\Eloquent\Builder $query
@@ -74,17 +86,7 @@ class Topic extends Content
 
     public function setDiscussionCountMetadata()
     {
-
-        return $this->childrenOfType($this->key, 'discussion')->withStatus(Discussion::APPROVED)->count();
-
-        // if(Cache::has('category.' . $this->id . '.count')) {
-        //  return Cache::get('category.' . $this->id . '.count');
-        // }
-
-        // $count = (int)$this->countChildrenOfTypeById($this->id, 'resource')[0]->resource_count;
-        // Cache::forever('category.' . $this->id . '.count', $count);
-
-        // return $count;
+        return $this->discussions()->approved()->count();
     }
 
 }

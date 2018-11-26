@@ -24,22 +24,22 @@ class DiscussionController extends ApiController
 {
     public function index()
     {
-        return Discussion::all()->load('meta');
+        return Discussion::withMeta()->get();
     }
 
     public function latest()
     {
-        return Discussion::latest()->get()->load('meta');
+        return Discussion::withMeta()->approved()->latest()->get();
     }
 
     public function oldest()
     {
-        return Discussion::oldest()->get()->load('meta');
+        return Discussion::withMeta()->approved()->oldest()->get();
     }
 
     public function all()
     {
-        return Discussion::withoutGlobalScopes([ApprovedDiscussionScope::class, TranslationScope::class])->get()->load('meta');
+        return Discussion::withoutGlobalScopes([ApprovedDiscussionScope::class, TranslationScope::class])->withMeta()->get();
     }
 
     /**
@@ -56,7 +56,6 @@ class DiscussionController extends ApiController
 
         $discussion = $content->contentStore($request);
         $discussion->saveRelation('parent-id', $request->parent_id);
-        //$discussion->saveMetadata('author_id', Auth::id());
         $discussion->saveMetadata('response_count', 0);
         $discussion->saveMetadata('notify_users', (isset($request->notifyUsersField) && $request->notifyUsersField) ? true : false);
 
@@ -84,7 +83,7 @@ class DiscussionController extends ApiController
 
         return response()->json([
             'status' => 'success',
-            'discussion' => $discussion->load('relations', 'relations.relation', 'relations.relationType', 'meta'),
+            'discussion' => $discussion->load('topic', 'user', 'meta'),
             'message' => ___('Discussion created successfully.'),
         ]);
     }
@@ -122,7 +121,7 @@ class DiscussionController extends ApiController
             'status' => $status,
             'message' => $message,
             'type' => 'discussionUpdated',
-            'discussion' => $discussion->load('relations', 'relations.relation', 'relations.relationType', 'meta')
+            'discussion' => $discussion->load('topic', 'user', 'meta')
         ]);
     }
 
@@ -160,7 +159,7 @@ class DiscussionController extends ApiController
             'status' => $status,
             'message' => $message,
             'type' => 'discussionCreated',
-            'discussion' => $response->load('relations', 'relations.relation', 'relations.relationType', 'meta')
+            'discussion' => $response->load('topic', 'user', 'meta')
         ]);
     }
 
@@ -200,55 +199,34 @@ class DiscussionController extends ApiController
     public function get($topic, $discussion)
     {
         $discussion = $this->discussion($topic, $discussion)->first();
-        $discussion->children = Discussion::childrenOf($discussion->key)
+
+        $discussion->children = $discussion->children()
             ->withContents()
-            ->withoutGlobalScopes([ApprovedDiscussionScope::class, TranslationScope::class])
+            ->withMeta()
+            ->withRelationships()
+            ->with(['children' => function($q) { $q->withContents()->withMeta()->withRelationships(); }])
             ->get();
 
-        //Get all children of children
-        foreach ($discussion->children as $index => $child) {
-            $discussion->children[$index]->children = Discussion::childrenOf($child->key)
-                ->withContents()
-                ->withoutGlobalScopes([ApprovedDiscussionScope::class, TranslationScope::class])
-                ->get();
-        }
-
-        return $discussion->count() ? $discussion: abort(404);
-    }
-
-    /**
-     * Get all discussions belonging to a specific topic (without children)
-     */
-    public function topicDiscussions($topic, $options = null)
-    {
-        //Get the topic
-        $topic = Topic::where('contents.key', $topic)->first();
-
-        $discussions = Discussion::childrenOf($topic->id)
-            ->withoutGlobalScope(TranslationScope::class)
-            ->withStatus(Discussion::APPROVED)
-            ->options($options)
-            ->withContents()
-            ->latest('r.created_at')
-            ->paginate(5);
-
-        return $discussions->count() ? $discussions: abort(404);
+        return $discussion->count() ? $discussion : abort(404);
     }
 
     /**
      * Get a Discussion (without children)
+     *
      * @param  String $topic Category key
      * @param  String $parameters  Discussion key
      * @return String           Returns the discussion values as JSON
      */
     public function discussion($topic, $discussion)
     {
-        $discussion = Discussion::childOfType((new Discussion)->getWithPath('discussion-topic/' . $topic), 'discussion', $discussion)
+        $discussion = Discussion::where('contents.id', content_id("discussion-topic/$topic/$discussion"))
             ->withoutGlobalScope(TranslationScope::class)
             ->withContents()
+            ->withMeta()
+            ->withRelationships()
             ->get();
 
-        return $discussion->count() ? $discussion: abort(404);
+        return $discussion->count() ? $discussion : abort(404);
     }
 
     /**
@@ -307,21 +285,21 @@ class DiscussionController extends ApiController
     {
         $query = $request->query->get('query') ?: '';
 
-        $discussions = Discussion::childrenOfType(Topic::all(), 'discussion')
+        $discussions = Discussion::topLevel()
             ->distinct()
+            ->approved()
             ->where(function($q) use ($query) {
-                $q->where('r.title', 'like', $query.'%')
-                ->orWhere('r.title', 'like', '%'.$query)
-                ->orWhere('r.title', 'like', '%'.$query.'%')
-                ->orWhere('r.content', 'like', $query.'%')
-                ->orWhere('r.content', 'like', '%'.$query)
-                ->orWhere('r.content', 'like', '%'.$query.'%');
+                $q->where('contents.title', 'like', $query.'%')
+                ->orWhere('contents.title', 'like', '%'.$query)
+                ->orWhere('contents.title', 'like', '%'.$query.'%')
+                ->orWhere('contents.content', 'like', $query.'%')
+                ->orWhere('contents.content', 'like', '%'.$query)
+                ->orWhere('contents.content', 'like', '%'.$query.'%');
             })
             ->options($options)
-            ->withStatus(Discussion::APPROVED)
             ->paginate(5);
 
-        return $discussions->count() ? $discussions: abort(404);
+        return $discussions->count() ? $discussions : abort(404);
     }
 
     /**
@@ -329,12 +307,15 @@ class DiscussionController extends ApiController
      */
     public function top(Request $request, $options = null)
     {
-        $discussions = Discussion::childrenOfType(Topic::all(), 'discussion')
+        $discussions = Discussion::topLevel()
+            ->approved()
+            ->withContents()
+            ->withMeta()
+            ->withRelationships()
             ->options($options)
-            ->withStatus(Discussion::APPROVED)
             ->paginate(5);
 
-        return $discussions->count() ? $discussions: abort(404);
+        return $discussions->count() ? $discussions : abort(404);
     }
 
     /**
@@ -342,13 +323,15 @@ class DiscussionController extends ApiController
      */
     public function dashboard()
     {
-        $discussions = Discussion::childrenOfType(Topic::all(), 'discussion')
+        $discussions = Discussion::topLevel()
+            ->approved()
             ->withContents()
-            ->withStatus(Discussion::APPROVED)
-            ->latest('r.created_at')
+            ->withMeta()
+            ->withRelationships()
+            ->latest()
             ->paginate(3);
 
-        return $discussions->count() ? $discussions: abort(404);
+        return $discussions->count() ? $discussions : abort(404);
     }
 
     /**
@@ -356,11 +339,15 @@ class DiscussionController extends ApiController
      */
     public function byMember($member, $options = null)
     {
-        $discussions = Discussion::childenOfTypeWhereMetadata(Topic::all(), 'discussion', 'author_id', $member)
+        $discussions = Discussion::topLevel()
+            ->whereHas('user', function($q) use ($member) {
+                $q->where('id', $member);
+            })
             ->options($options)
             ->withContents()
-            ->withStatus(Discussion::APPROVED)
-            ->latest('r.created_at')
+            ->withMeta()
+            ->approved()
+            ->latest()
             ->paginate(5);
 
         return $discussions;

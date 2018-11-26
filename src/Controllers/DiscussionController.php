@@ -51,8 +51,11 @@ class DiscussionController extends ContentController
     public function index($topicID = null)
     {
         $this->viewData['index'] = [
-            'discussions' => Discussion::childrenOfType(Topic::all(), 'discussion')->withStatus(Discussion::APPROVED)
-                ->orderBy('created_at', 'desc')
+            'discussions' => Discussion::topLevel()
+                ->withMeta()
+                ->withRelationships()
+                ->approved()
+                ->latest()
                 ->paginate(),
             'filter' => 'active',
         ];
@@ -68,7 +71,10 @@ class DiscussionController extends ContentController
     public function children(Discussion $discussion)
     {
         return view('discussions::discussion.children', [
-            'discussions' => Discussion::childrenOfType($discussion->key, 'discussion')
+            'discussions' => $discussion->children()
+                ->approved()
+                ->withMeta()
+                ->withRelationships()
                 ->withContents()
                 ->paginate(),
             'parentDiscussion' => $discussion,
@@ -84,10 +90,11 @@ class DiscussionController extends ContentController
     public function deleted()
     {
         $this->viewData['index'] = [
-            'discussions' => Discussion::withoutGlobalScope(ApprovedDiscussionScope::class)
-                ->childrenOfType(Topic::all(), 'discussion')
+            'discussions' => Discussion::topLevel()
+                ->withMeta()
+                ->withRelationships()
                 ->deleted()
-                ->orderBy('created_at', 'desc')
+                ->latest()
                 ->paginate(),
             'filter' => 'deleted',
         ];
@@ -96,7 +103,7 @@ class DiscussionController extends ContentController
     }
 
     /**
-     * Show the form for creating a new webpage.
+     * Show the form for creating a new discussion.
      *
      * @return \Illuminate\Http\Response
      */
