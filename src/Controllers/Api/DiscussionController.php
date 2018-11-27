@@ -83,7 +83,7 @@ class DiscussionController extends ApiController
 
         return response()->json([
             'status' => 'success',
-            'discussion' => $discussion->load('topic', 'user', 'meta'),
+            'discussion' => Discussion::where('contents.id', $discussion->id)->withMeta()->withRelationships()->withContents()->first(),
             'message' => ___('Discussion created successfully.'),
         ]);
     }
@@ -93,7 +93,7 @@ class DiscussionController extends ApiController
      */
     public function save(DiscussionRequest $request, Discussion $discussion)
     {
-        if ( Auth::user()->id == $discussion->metadata('author_id')->id ) {
+        if ( Auth::user()->id == $discussion->user->id ) {
 
             //Do the save
             $request->merge(['content' => nl2br(trim($request->get('content')))]);
@@ -121,7 +121,7 @@ class DiscussionController extends ApiController
             'status' => $status,
             'message' => $message,
             'type' => 'discussionUpdated',
-            'discussion' => $discussion->load('topic', 'user', 'meta')
+            'discussion' => Discussion::where('contents.id', $discussion->id)->withMeta()->withRelationships()->withContents()->first()
         ]);
     }
 
@@ -159,7 +159,7 @@ class DiscussionController extends ApiController
             'status' => $status,
             'message' => $message,
             'type' => 'discussionCreated',
-            'discussion' => $response->load('topic', 'user', 'meta')
+            'discussion' => Discussion::where('contents.id', $response->id)->withMeta()->withRelationships()->withContents()->first()
         ]);
     }
 
@@ -168,7 +168,7 @@ class DiscussionController extends ApiController
      */
     public function delete(Discussion $discussion)
     {
-        if ( Auth::user()->id == $discussion->metadata('author_id')->id ) {
+        if ( Auth::user()->id == $discussion->user->id ) {
 
             //Do the delete
             $discussion->offBit(Discussion::APPROVED)->update();
