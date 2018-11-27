@@ -339,15 +339,16 @@ class DiscussionController extends ApiController
      */
     public function byMember($member, $options = null)
     {
-        $discussions = Discussion::topLevel()
-            ->whereHas('user', function($q) use ($member) {
-                $q->where('id', $member);
+        $discussions = Discussion::whereHas('user', function($q) use ($member) {
+                $q->where('users.id', $member);
             })
             ->options($options)
             ->withContents()
             ->withMeta()
+            ->withRelationships()
             ->approved()
             ->latest()
+            ->topLevel()
             ->paginate(5);
 
         return $discussions;
