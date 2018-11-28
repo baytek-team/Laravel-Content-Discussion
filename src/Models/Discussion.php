@@ -185,7 +185,7 @@ class Discussion extends Content
                 ->from('content_relations')
                 ->whereRaw("{$prefix}contents.id = {$prefix}content_relations.content_id")
                 ->where('content_relations.relation_type_id', 4)
-                ->whereIn('content_relations.relation_id', Topic::select('contents.id')->get());
+                ->whereIn('content_relations.relation_id', Topic::select('contents.id')->get()->pluck('id'));
         });
     }
 }
