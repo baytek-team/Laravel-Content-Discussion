@@ -166,7 +166,7 @@ class DiscussionController extends ContentController
 
         $this->viewData['edit'] = [
             'parents' => Discussion::where('contents.key', 'discussion')->get(),
-            'parent_id' => $discussion->getRelationship('parent-id')->id,
+            'parent_id' => $discussion->parent(),
             'topics' => Topic::all(),
         ];
 

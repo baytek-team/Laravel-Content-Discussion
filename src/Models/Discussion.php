@@ -58,12 +58,12 @@ class Discussion extends Content
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
-    public function parent()
-    {
-        return $this->belongsToOneOrMany(Discussion::class, 'content_relations', 'content_id', 'relation_id')
-            ->wherePivot('relation_type_id', content('relation-type/parent-id', false))
-            ->expectOne();
-    }
+    // public function parent()
+    // {
+    //     return $this->belongsToOneOrMany(Discussion::class, 'content_relations', 'content_id', 'relation_id')
+    //         ->wherePivot('relation_type_id', content('relation-type/parent-id', false))
+    //         ->expectOne();
+    // }
 
     /**
      * Get the responses to this discussion
