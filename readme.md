@@ -5,29 +5,6 @@
 
 ## Installation
 
-#### Composer
-
-Currently this project is not publicly available. You must add a repository object in your composer.json file. You must also have SSH keys setup.
-
-```javascript
-"repositories": [
-    {
-        "type": "git",
-        "url": "ssh://sls@slsapp.com:1234/baytek/laravel-content-webpage.git"
-    }
-],
-```
-
-Add the following `require` to your composer.json file:
-
-```javascript
-"baytek/laravel-content-webpage": "dev-master"
-```
-
-Lastly run:
-
-`composer update`
-
 ## Configuration
 
 Currently there is no real configuration other than configurations that are exposed using the `laravel-settings` package.
